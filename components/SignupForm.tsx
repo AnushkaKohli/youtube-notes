@@ -57,8 +57,6 @@ const SignupForm = () => {
                     password: values.password,
                     callbackUrl: '/'
                 })
-                console.log("Session: ", session)
-                console.log("Session status: ", sessionStatus)
             }
         } catch (error) {
             console.log("Error during signup: ", error);
