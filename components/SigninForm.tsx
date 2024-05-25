@@ -32,13 +32,13 @@ const validationSchema = Yup.object({
 
 const SigninForm = () => {
     const router = useRouter();
-    // const { data: session, status: sessionStatus } = useSession();
+    const { data: session, status: sessionStatus } = useSession();
 
-    // useEffect(() => {
-    //     if (session) {
-    //         router.replace("/")
-    //     }
-    // }, [session, router])
+    useEffect(() => {
+        if (session) {
+            router.replace("/")
+        }
+    }, [session, router])
 
     const onSubmit = async (values: any, onSubmitProps: any) => {
         console.log(values);
@@ -57,9 +57,9 @@ const SigninForm = () => {
         onSubmitProps.resetForm();
     }
 
-    // if (sessionStatus === "loading") {
-    //     return <div>Loading...</div>
-    // }
+    if (sessionStatus === "loading") {
+        return <div>Loading...</div>
+    }
     return (
         <Formik
             initialValues={initialValues}
