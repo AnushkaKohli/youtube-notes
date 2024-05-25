@@ -1,41 +1,19 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
 
 const initialValues = {
     name: "",
     email: "",
     password: ""
-}
-
-let router;
-
-const onSubmit = async (values: any, onSubmitProps: any) => {
-    console.log(values);
-    try {
-        const existingUser = await axios.post('/api/existingUser', values.email);
-        console.log("Existing user: ", existingUser.data);
-        if (existingUser) {
-            alert("User already exists");
-            return;
-        }
-
-        const response = await axios.post("/api/signup", values);
-        if (response.status === 201) {
-            onSubmitProps.resetForm();
-            router.push('/');
-        }
-    } catch (error) {
-        console.log("Error during signup: ", error);
-    }
 }
 
 const validationSchema = Yup.object({
@@ -51,7 +29,41 @@ const validationSchema = Yup.object({
 })
 
 const SignupForm = () => {
-    router = useRouter();
+    const router = useRouter();
+    const { data: session, status: sessionStatus } = useSession();
+
+    useEffect(() => {
+        if (sessionStatus === "authenticated") {
+            router.replace("/")
+        }
+    }, [sessionStatus, router])
+    const onSubmit = async (values: any, onSubmitProps: any) => {
+        try {
+            const existingUser = await axios.post('/api/existingUser', { email: values.email });
+            const user = existingUser.data;
+            console.log("User: ", user)
+            if (user !== "User not found") {
+                alert("User already exists");
+                return;
+            }
+
+            const response = await axios.post("/api/signup", values);
+            console.log("Response: ", response)
+            if (response.status === 201) {
+                onSubmitProps.resetForm();
+                await signIn('credentials', {
+                    redirect: true,
+                    email: values.email,
+                    password: values.password,
+                    callbackUrl: '/'
+                })
+                console.log("Session: ", session)
+                console.log("Session status: ", sessionStatus)
+            }
+        } catch (error) {
+            console.log("Error during signup: ", error);
+        }
+    }
     return (
         <Formik
             onSubmit={onSubmit}

@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 import { Account, User as AuthUser } from "next-auth";
 import connectMongoDB from "@/utils/mongodb";
 import User from "@/models/User";
@@ -27,6 +29,34 @@ export const authOptions: any = {
           access_type: "offline",
           response_type: "code",
         },
+      },
+    }),
+    CredentialsProvider({
+      id: "credentials",
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials, req) {
+        const { email, password } = credentials as {
+          email: string;
+          password: string;
+        };
+        try {
+          await connectMongoDB();
+          const user = await User.findOne({ email });
+          if (!user) {
+            return null;
+          }
+          const isValidPassword = await bcrypt.compare(password, user.password);
+          if (!isValidPassword) {
+            throw new Error("Invalid password");
+          }
+          return user;
+        } catch (error) {
+          console.log("Error in credentials provider: ", error);
+        }
       },
     }),
   ],
@@ -80,6 +110,9 @@ export const authOptions: any = {
           console.log("Error in saving user: ", error);
           return false;
         }
+      }
+      if (account?.provider == "credentials") {
+        return true;
       }
     },
   },

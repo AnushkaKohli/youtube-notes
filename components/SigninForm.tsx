@@ -2,17 +2,12 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import type {
-    GetServerSidePropsContext,
-    InferGetServerSidePropsType,
-} from "next"
-import { getProviders, signIn, useSession } from "next-auth/react"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { useRouter } from 'next/navigation';
+import { signIn, useSession } from "next-auth/react"
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
 
 const initialValues = {
     email: "",
@@ -35,22 +30,22 @@ const SigninForm = () => {
     const { data: session, status: sessionStatus } = useSession();
 
     useEffect(() => {
-        if (session) {
+        if (sessionStatus === "authenticated") {
             router.replace("/")
         }
-    }, [session, router])
+    }, [sessionStatus, router])
 
     const onSubmit = async (values: any, onSubmitProps: any) => {
-        console.log(values);
         try {
             const response = await signIn('credentials', {
                 redirect: false,
                 email: values.email,
                 password: values.password
             })
-            console.log("Response: ", response)
             if (response?.url)
                 router.replace("/")
+            if (response?.error)
+                alert("Invalid credentials");
         } catch (error) {
             console.log("Error during signin: ", error)
         }
