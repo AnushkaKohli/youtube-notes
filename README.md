@@ -38,3 +38,11 @@ if (response.status === 201) {
     })
 }
 ```
+
+## Formik
+
+Formik is used for form handling. It is used for the following forms:
+
+- Signup form
+- Signin form
+- Add video form
