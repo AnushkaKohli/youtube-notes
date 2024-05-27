@@ -101,9 +101,6 @@ const AllVideos = () => {
     return (
         <div className='m-4'>
             {/* All notes */}
-            <button onClick={() => {
-                console.log("Data: ", data)
-            }}>Data</button>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 gap-x-8 gap-y-8 mt-4 p-10 md:p-5'>
                 {
                     data.map((data, index) => {
