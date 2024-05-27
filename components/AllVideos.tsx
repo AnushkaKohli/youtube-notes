@@ -4,15 +4,13 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import Loading from './Loading';
-
-interface AllVideosProps {
-    thumbnails: string[];
-}
+import Link from 'next/link';
 
 const AllVideos = () => {
     const [thumbnails, setThumbnails] = useState<string[]>([]);
     const [titles, setTitles] = useState<string[]>([]);
-    const [channelNames, setChannelNames] = useState<string[]>([]);;
+    const [channelNames, setChannelNames] = useState<string[]>([]);
+    const [videoIds, setVideoIds] = useState<string[]>([]);
 
     useEffect(() => {
         fetchData();
@@ -32,10 +30,35 @@ const AllVideos = () => {
         try {
             const response = await axios.get('/api/video');
             response.data.map(async (video: any) => {
+                setVideoIds((prev) => {
+                    if (!prev.includes(video.videoId)) {
+                        return prev.concat(video.videoId);
+                    } else {
+                        return prev;
+                    }
+                })
                 const result = await getResult(video.videoId);
-                setThumbnails((prev) => prev.concat(result.thumbnails.maxres.url));
-                setTitles((prev) => prev.concat(result.title));
-                setChannelNames((prev) => prev.concat(result.channelTitle));
+                setThumbnails((prev) => {
+                    if (!prev.includes(result.thumbnails.maxres.url)) {
+                        return prev.concat(result.thumbnails.maxres.url);
+                    } else {
+                        return prev;
+                    }
+                });
+                setTitles((prev) => {
+                    if (!prev.includes(result.title)) {
+                        return prev.concat(result.title);
+                    } else {
+                        return prev;
+                    }
+                });
+                setChannelNames((prev) => {
+                    if (!prev.includes(result.channelTitle)) {
+                        return prev.concat(result.channelTitle);
+                    } else {
+                        return prev;
+                    }
+                });
             })
         } catch (error) {
             console.log("Error in getting videos", error)
@@ -70,46 +93,33 @@ const AllVideos = () => {
 
     if (thumbnails.length === 0 || !thumbnails) {
         return (
-            <div>
-                <button onClick={() => console.log(thumbnails)}>Get Thumbnail</button>
-                <Loading />
-            </div>
+            <Loading />
         )
     }
     return (
         <div className='m-4'>
             {/* All notes */}
-            <button onClick={() => console.log(thumbnails)}>Get Thumbnail</button>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 gap-x-8 gap-y-8 mt-4 p-10 md:p-5'>
                 {
                     thumbnails.map((thumbnail, index) => {
                         return (
-                            <div className='flex flex-col' key={index}>
-                                <Image src={thumbnail} alt='thumbnail' width="600" height="500" className='rounded-lg self-center' />
-                                <div className='font-semibold text-base 3xl:text-2xl my-1.5 overflow-hidden'>
-                                    <h1>
-                                        {
-                                            // setTruncateString(titles[index])
-                                            truncateString(titles[index], 90)
-                                        }
-                                    </h1>
+                            <Link key={index} href={`/video/${videoIds[index]}`} passHref>
+                                <div className='flex flex-col'>
+                                    <Image src={thumbnail} alt='thumbnail' width="600" height="500" className='rounded-lg self-center' />
+                                    <div className='font-semibold text-base 3xl:text-2xl my-1.5 overflow-hidden'>
+                                        <h1>
+                                            {
+                                                // setTruncateString(titles[index])
+                                                truncateString(titles[index], 90)
+                                            }
+                                        </h1>
+                                    </div>
+                                    <p className='font-semibold text-sm 3xl:text-xl text-[#555] my-1.5'>{channelNames[index]}</p>
                                 </div>
-                                <p className='font-semibold text-sm 3xl:text-xl text-[#555] my-1.5'>{channelNames[index]}</p>
-                            </div>
+                            </Link>
                         )
                     })
                 }
-                <div className='flex justify-center flex-col'>
-                    <Image src='https://i.ytimg.com/vi/HZuk6Wkx_Eg/maxresdefault.jpg' alt='thumbnail' width="600" height="500" className='rounded-lg self-center' />
-                    <div className='font-semibold text-base 3xl:text-2xl my-1.5 overflow-hidden'>
-                        <h1>
-                            {
-                                truncateString('lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 90)
-                            }
-                        </h1>
-                    </div>
-                    <p className='font-semibold text-sm 3xl:text-xl text-[#555] my-1.5'>dshfjksd</p>
-                </div>
             </div>
         </div>
     )

@@ -8,6 +8,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
+import Loading from './Loading';
 
 const initialValues = {
     email: "",
@@ -53,7 +54,7 @@ const SigninForm = () => {
     }
 
     if (sessionStatus === "loading") {
-        return <div>Loading...</div>
+        return <Loading />
     }
     return (
         <Formik

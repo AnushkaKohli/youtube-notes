@@ -1,10 +1,11 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import Loading from './Loading';
 
 const initialValues = {
     videoUrl: ""
@@ -16,15 +17,19 @@ const validationSchema = Yup.object({
 
 const AddVideo = () => {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
     const onSubmit = async (values: any, onSubmitProps: any) => {
         try {
             const splitPart = values.videoUrl.split('?v=')[1];
             const videoId = splitPart.split('&')[0];
+            setLoading(true);
             const response = await axios.post('/api/video', { videoId });
             if (response.data === "Video already exists") {
                 alert("Video already exists")
+                setLoading(false);
             }
             if (response.status === 201) {
+                setLoading(false);
                 onSubmitProps.resetForm();
                 router.push('/');
             }
@@ -33,6 +38,11 @@ const AddVideo = () => {
         }
         onSubmitProps.resetForm();
     }
+
+    if (loading) return (
+        <Loading />
+    )
+
     return (
         <Formik
             initialValues={initialValues}
