@@ -27,7 +27,7 @@ export const POST = async (request: NextRequest) => {
   }
 };
 
-export const GET = async (request: NextRequest) => {
+export const GET = async () => {
   try {
     await connectMongoDB();
     const videos = await YoutubeVideo.find();
@@ -35,5 +35,23 @@ export const GET = async (request: NextRequest) => {
   } catch (error) {
     console.log("Error in getting videos", error);
     return new NextResponse("Error in getting videos", { status: 500 });
+  }
+};
+
+export const DELETE = async (request: NextRequest) => {
+  try {
+    const { videoId } = await request.json();
+    if (!videoId) {
+      return new NextResponse("Video ID is required", { status: 400 });
+    }
+    await connectMongoDB();
+    const video = await YoutubeVideo.findOneAndDelete({ videoId });
+    if (!video) {
+      return new NextResponse("Video not found", { status: 404 });
+    }
+    return new NextResponse("Video deleted successfully", { status: 200 });
+  } catch (error) {
+    console.log("Error in deleting video", error);
+    return new NextResponse("Error in deleting video", { status: 500 });
   }
 };

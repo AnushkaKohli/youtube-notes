@@ -5,13 +5,9 @@ import Image from 'next/image';
 import axios from 'axios';
 import Loading from './Loading';
 import Link from 'next/link';
-import Button from './Button';
 
 const AllVideos = () => {
-    const [thumbnails, setThumbnails] = useState<string[]>([]);
-    const [titles, setTitles] = useState<string[]>([]);
-    const [channelNames, setChannelNames] = useState<string[]>([]);
-    const [videoIds, setVideoIds] = useState<string[]>([]);
+    const [data, setData] = useState<any[]>([]); // [title, channelName, thumbnail, videoId]
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -35,35 +31,22 @@ const AllVideos = () => {
             setLoading(true);
             const response = await axios.get('/api/video');
             response.data.map(async (video: any) => {
-                setVideoIds((prev) => {
-                    if (!prev.includes(video.videoId)) {
-                        return prev.concat(video.videoId);
+                const result = await getResult(video.videoId);
+                setData((prev) => {
+                    const existingIndex = prev.findIndex(item => item.videoId === video.videoId);
+                    if (existingIndex === -1) {
+                        // videoId not found in prev array, so concatenate
+                        return prev.concat({
+                            "title": result.title,
+                            "channelName": result.channelTitle,
+                            "thumbnail": result.thumbnails.maxres.url,
+                            "videoId": video.videoId
+                        });
                     } else {
+                        // videoId already exists in prev array, so return prev array as is
                         return prev;
                     }
                 })
-                const result = await getResult(video.videoId);
-                setThumbnails((prev) => {
-                    if (!prev.includes(result.thumbnails.maxres.url)) {
-                        return prev.concat(result.thumbnails.maxres.url);
-                    } else {
-                        return prev;
-                    }
-                });
-                setTitles((prev) => {
-                    if (!prev.includes(result.title)) {
-                        return prev.concat(result.title);
-                    } else {
-                        return prev;
-                    }
-                });
-                setChannelNames((prev) => {
-                    if (!prev.includes(result.channelTitle)) {
-                        return prev.concat(result.channelTitle);
-                    } else {
-                        return prev;
-                    }
-                });
             })
             setLoading(false);
         } catch (error) {
@@ -103,7 +86,7 @@ const AllVideos = () => {
         )
     }
 
-    if (thumbnails.length === 0 || !thumbnails) {
+    if (data.length === 0 || !data) {
         return (
             <div className='flex flex-col gap-y-8 items-center justify-center h-full w-full absolute'>
                 <h1 className='text-3xl font-bold self-center'>No videos to show. Add new videos!</h1>
@@ -118,22 +101,25 @@ const AllVideos = () => {
     return (
         <div className='m-4'>
             {/* All notes */}
+            <button onClick={() => {
+                console.log("Data: ", data)
+            }}>Data</button>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 gap-x-8 gap-y-8 mt-4 p-10 md:p-5'>
                 {
-                    thumbnails.map((thumbnail, index) => {
+                    data.map((data, index) => {
                         return (
-                            <Link key={index} href={`/video/${videoIds[index]}`} passHref>
+                            <Link key={index} href={`/video/${data.videoId}`} passHref>
                                 <div className='flex flex-col'>
-                                    <Image src={thumbnail} alt='thumbnail' width="600" height="500" className='rounded-lg self-center' />
+                                    <Image src={data.thumbnail} alt='thumbnail' width="600" height="500" className='rounded-lg self-center' />
                                     <div className='font-semibold text-base 3xl:text-2xl my-1.5 overflow-hidden'>
                                         <h1>
                                             {
                                                 // setTruncateString(titles[index])
-                                                truncateString(titles[index], 90)
+                                                truncateString(data.title, 90)
                                             }
                                         </h1>
                                     </div>
-                                    <p className='font-semibold text-sm 3xl:text-xl text-[#555] my-1.5'>{channelNames[index]}</p>
+                                    <p className='font-semibold text-sm 3xl:text-xl text-[#555] my-1.5'>{data.channelName}</p>
                                 </div>
                             </Link>
                         )

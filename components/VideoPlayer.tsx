@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import axios from 'axios';
 import VideoTitle from './VideoTitle';
 import Notes from './Notes';
 import { convertSecondsToTimeString } from '@/utils/conversion';
+import Button from './Button';
 
 interface VideoPlayerProps {
     videoId: string;
@@ -66,9 +68,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoId }) => {
 
     return (
         <div className="p-4 flex flex-col justify-center">
-            <h1 className="w-full font-semibold text-xl pb-4">
-                {channelName}
-            </h1>
+            <div className='flex w-full justify-between'>
+                <h1 className=" font-semibold text-xl pb-4">
+                    {channelName}
+                </h1>
+                <Link href={`/video/${videoId}/deleteVideo`}>
+                    <button type="button" className="text-white bg-red-600 border hover:bg-red-500 font-medium rounded-lg text-sm px-4 py-2.5 mb-4">
+                        Delete Video
+                    </button>
+                </Link>
+            </div>
             <div className="video-player">
                 <YouTube
                     videoId={videoId}
