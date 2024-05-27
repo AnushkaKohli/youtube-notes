@@ -2,33 +2,56 @@
 
 import React from 'react';
 import Link from "next/link"
-import { useRouter } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+import { FaVideo } from "react-icons/fa";
 
 const Navbar = () => {
-    const router = useRouter();
     const { data: session } = useSession();
     return (
-        <div>
-            <nav className="bg-indigo-600 p-4 text-white">
-                <ul className="flex justify-between text-2xl font-bold">
-                    <li><Link href="/">Home</Link></li>
-                    {
-                        session ? (
-                            <div className='flex gap-10'>
-                                <li><Link href="/video/addVideo">Add Video</Link></li>
-                                <li><Link href="/api/auth/signout">Sign Out</Link></li>
-                            </div>
-                        ) : (
-                            <div className='flex gap-10'>
-                                <li><Link href="/video/addVideo">Add Video</Link></li>
-                                <li><Link href="/auth/signin">Sign In</Link></li>
-                                <li><Link href="/auth/signup">Sign Up</Link></li>
-                            </div>
-                        )
-                    }
-                </ul>
-            </nav>
+        <div className='mb-12 md:mb-28'>
+            <header
+                className="fixed inset-x-0 top-0 z-30 mx-auto w-full max-w-screen-md border border-gray-100 bg-white/80 py-3 shadow backdrop-blur-lg md:top-6 md:rounded-3xl lg:max-w-screen-lg">
+                <div className="px-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex shrink-0">
+                            <Link href="/" className="flex items-center">
+                                <FaVideo className="h-7 w-auto" />
+                            </Link>
+                        </div>
+                        <div className="hidden md:flex md:items-center md:justify-center md:gap-5">
+                            <Link href="/" className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900">
+                                Home
+                            </Link>
+                            <Link href="/video/addVideo" className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900">
+                                Add Video
+                            </Link>
+                        </div>
+                        <div className="flex md:hidden">
+                            <Link href="/video/addVideo" className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900">
+                                Add Video
+                            </Link>
+                        </div>
+                        <div className="flex items-center justify-end gap-3">
+                            {
+                                session ? (
+                                    <Link href="/api/auth/signout" className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                        Sign Out
+                                    </Link>
+                                ) : (
+                                    <div>
+                                        <Link href="/auth/signin" className="hidden items-center justify-center rounded-xl bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 transition-all duration-150 hover:bg-gray-50 sm:inline-flex">
+                                            Sign In
+                                        </Link>
+                                        <Link href="/auth/signup" className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                            Sign Up
+                                        </Link>
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </div>
+                </div>
+            </header>
         </div>
     )
 }

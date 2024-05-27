@@ -67,7 +67,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoId }) => {
     };
 
     return (
-        <div className="p-4 flex flex-col justify-center">
+        <div className="p-4 flex flex-col justify-center mt-16 md:-mt-4">
             <div className='flex w-full justify-between'>
                 <h1 className=" font-semibold text-xl pb-4">
                     {channelName}

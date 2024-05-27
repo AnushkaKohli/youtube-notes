@@ -88,7 +88,7 @@ const AllVideos = () => {
 
     if (data.length === 0 || !data) {
         return (
-            <div className='flex flex-col gap-y-8 items-center justify-center h-full w-full absolute'>
+            <div className='flex flex-col gap-y-8 items-center justify-center h-full w-full absolute m-8'>
                 <h1 className='text-3xl font-bold self-center'>No videos to show. Add new videos!</h1>
                 <Link href='/video/addVideo'>
                     <button type="button" className="text-white bg-gray-900 border border-gray-300 focus:outline-none hover:bg-gray-800 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-4 py-2.5 me-2 mb-2 flex items-center gap-x-2">

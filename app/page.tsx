@@ -3,7 +3,7 @@ import AllVideos from '@/components/AllVideos';
 
 export default function Home () {
   return (
-    <div>
+    <div className=''>
       <AllVideos />
     </div>
   );
