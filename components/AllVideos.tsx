@@ -5,12 +5,14 @@ import Image from 'next/image';
 import axios from 'axios';
 import Loading from './Loading';
 import Link from 'next/link';
+import Button from './Button';
 
 const AllVideos = () => {
     const [thumbnails, setThumbnails] = useState<string[]>([]);
     const [titles, setTitles] = useState<string[]>([]);
     const [channelNames, setChannelNames] = useState<string[]>([]);
     const [videoIds, setVideoIds] = useState<string[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         fetchData();
@@ -18,8 +20,10 @@ const AllVideos = () => {
 
     const getResult = async (videoId: string) => {
         try {
+            setLoading(true);
             const response = await axios.get(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${process.env.NEXT_PUBLIC_YOUTUBE_DATA_API_KEY}`)
             const result = response.data.items[0].snippet;
+            setLoading(false);
             return result;
         } catch (error) {
             console.log("Error in getting details from youtube API", error)
@@ -28,6 +32,7 @@ const AllVideos = () => {
 
     const fetchData = async () => {
         try {
+            setLoading(true);
             const response = await axios.get('/api/video');
             response.data.map(async (video: any) => {
                 setVideoIds((prev) => {
@@ -60,6 +65,7 @@ const AllVideos = () => {
                     }
                 });
             })
+            setLoading(false);
         } catch (error) {
             console.log("Error in getting videos", error)
         }
@@ -91,9 +97,22 @@ const AllVideos = () => {
     //     return resultantString;
     // }
 
-    if (thumbnails.length === 0 || !thumbnails) {
+    if (loading) {
         return (
             <Loading />
+        )
+    }
+
+    if (thumbnails.length === 0 || !thumbnails) {
+        return (
+            <div className='flex flex-col gap-y-8 items-center justify-center h-full w-full absolute'>
+                <h1 className='text-3xl font-bold self-center'>No videos to show. Add new videos!</h1>
+                <Link href='/video/addVideo'>
+                    <button type="button" className="text-white bg-gray-900 border border-gray-300 focus:outline-none hover:bg-gray-800 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-4 py-2.5 me-2 mb-2 flex items-center gap-x-2">
+                        Add new video
+                    </button>
+                </Link>
+            </div>
         )
     }
     return (
