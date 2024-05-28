@@ -1,17 +1,10 @@
 # Youtube Notes
 
-It is a simple application to take notes of youtube videos. It has the following features:
+## System
 
-- User can signup and signin using NextAuth
-- User can add/delete a youtube video link
-- User can take notes of the video
-- User can edit the notes
-- User can delete the notes
-- User can add image to the notes
-- User can add the exact timestamp at which the note was taken
-- User can seek the video to the exact timestamp when the note was taken
+![System image](/readmeImages/system.png)
 
-## System Images
+## Application Images
 
 - Signup form
 
@@ -40,6 +33,18 @@ It is a simple application to take notes of youtube videos. It has the following
 - Delete video
 
 ![Delete video image](/readmeImages/deleteVideo.png)
+
+## System Functionalitites
+
+Youtube notes is a simple application to take notes of youtube videos. It has the following features:
+
+- User can signup and signin using NextAuth
+- User can add/delete a youtube video link
+- User can take notes of the video
+- User can edit and delete the notes
+- User can add image to the notes
+- The exact timestamp at which the note was taken is automatically added while taking note
+- User can seek the video to the exact timestamp when the note was taken
 
 ## NextAuth
 
@@ -76,3 +81,11 @@ Formik is used for form handling. It is used for the following forms:
 - Signup form
 - Signin form
 - Add video form
+
+## Youtube Data API
+
+Youtube Data API is used to get the video details. The credentials of this youtube data api is handled using google cloud console, where the api key is generated.
+
+## To do
+
+[ ] Store notes in database instead of local storage
