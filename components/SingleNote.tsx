@@ -37,7 +37,7 @@ const SingleNote: React.FC<SingleNote> = ({ timestamp, createdAt, content, image
                 <Button onClick={handleDelete} text='Delete note' />
                 <Button onClick={handleEdit} text='Edit note' />
             </div>
-            <hr className="h-[0.5px] my-4 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+            <hr className="h-[0.5px] my-4 bg-gray-200 border-0"></hr>
         </div>
     );
 };

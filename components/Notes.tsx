@@ -124,7 +124,7 @@ const Notes: React.FC<NotesProps> = ({ timestamp, setTimestamp, videoId, player 
                     </div>
                 )
             }
-            <hr className="h-[0.5px] my-6 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+            <hr className="h-[0.5px] my-6 bg-gray-200 border-0"></hr>
             {
                 notes.map((note, index) => (
                     <div key={index}>
