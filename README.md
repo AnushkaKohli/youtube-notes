@@ -3,13 +3,43 @@
 It is a simple application to take notes of youtube videos. It has the following features:
 
 - User can signup and signin using NextAuth
-- User can add a youtube video link
+- User can add/delete a youtube video link
 - User can take notes of the video
 - User can edit the notes
 - User can delete the notes
 - User can add image to the notes
 - User can add the exact timestamp at which the note was taken
 - User can seek the video to the exact timestamp when the note was taken
+
+## System Images
+
+- Signup form
+
+![Signup image](/readmeImages/signup.png)
+
+- Signin form
+
+![Signin image](/readmeImages/signin.png)
+
+- Home page
+
+![Home image](/readmeImages/home.png)
+
+- Add video form
+
+![Add video image](/readmeImages/addVideo.png)
+
+- Video player
+
+![Video player image](/readmeImages/videoPlayer.png)
+
+- Add note
+
+![Add note image](/readmeImages/addNote.png)
+
+- Delete video
+
+![Delete video image](/readmeImages/deleteVideo.png)
 
 ## NextAuth
 

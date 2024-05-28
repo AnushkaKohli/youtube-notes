@@ -26,7 +26,7 @@ const DeleteVideo = ({ videoId }: DeleteVideoProps) => {
         }
     }
     return (
-        <div className='flex flex-col gap-y-8 items-center justify-center h-full max-w-full absolute mx-8'>
+        <div className='flex flex-col gap-y-8 items-center justify-center h-full max-w-full md:w-full absolute mx-8'>
             <h1 className='text-3xl font-bold text-center'>Are you sure you want to delete the video?</h1>
             <div className='flex items-center justify-between gap-x-6'>
                 <button type="button" onClick={() => deleteVideo(videoId)} className="text-white bg-gray-900 border border-gray-300 focus:outline-none hover:bg-gray-800 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-4 py-2.5 me-2 mb-2 flex items-center gap-x-2">
